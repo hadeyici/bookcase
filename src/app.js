@@ -1,8 +1,10 @@
 import createError from 'http-errors';
-import express from 'express';
-import path from 'path';
-import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import cookieParser from 'cookie-parser';
+import path from 'path';
+import bodyParser from 'body-parser';
+import express from 'express';
+import connectMongo from '../config/mongoconnect';
 import indexRouter from './routes';
 
 const app = express();
@@ -13,9 +15,14 @@ app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Connect Mongo
+connectMongo();
 
 app.use('/', indexRouter);
 

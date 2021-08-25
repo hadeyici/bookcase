@@ -11,17 +11,21 @@
     "format": "prettier --write \"src/**/*.js\""
   },
   "dependencies": {
+    "body-parser": "^1.19.0",
     "cookie-parser": "~1.4.4",
     "core-js": "^3.16.3",
     "debug": "~2.6.9",
+    "dotenv": "^10.0.0",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "mongoose": "^5.9.6",
     "morgan": "~1.9.1",
-    "regenerator-runtime": "^0.13.9"
+    "regenerator-runtime": "^0.13.9",
+    "validator": "^13.6.0"
   },
   "engines": {
-    "node": "15.X"
+    "node": ">=10.16.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",
@@ -36,5 +40,18 @@
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-prettier": "^3.4.1",
     "prettier": "^2.3.2"
-  }
+  },
+  "description": "A REST API for library case",
+  "main": ".eslintrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hadeyici/bookcase.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hadeyici/bookcase/issues"
+  },
+  "homepage": "https://github.com/hadeyici/bookcase#readme"
 }
