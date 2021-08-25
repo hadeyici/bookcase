@@ -1,18 +1,37 @@
+import User from '../../models/User';
+
 const userController = {};
 
 // Create User
 userController.create = async (req, res) => {
-  console.log('create job');
+  const data = new User({
+    name: req.body.name,
+  });
+
+  data
+    .save()
+    .then((user) => res.json(user))
+    .catch((error) => res.status(500).json({ error: error.toString() }));
 };
 
 // Get All Users
 userController.findAll = async (req, res) => {
-  console.log('find all job');
+  try {
+    const users = await User.find();
+    return res.json(users);
+  } catch (error) {
+    return res.status(500).json({ error: error.toString() });
+  }
 };
 
 // Get User By ID
 userController.findOne = async (req, res) => {
-  console.log('find one job');
+  try {
+    const user = await User.findById(req.params.userId);
+    return res.json(user);
+  } catch (error) {
+    return res.status(500).json({ error: error.toString() });
+  }
 };
 
 // Borrow Book
