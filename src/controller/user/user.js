@@ -1,4 +1,8 @@
 import User from '../../models/User';
+import Borrows from '../../models/Borrows';
+import borrowHelpers from '../../helpers/borrow';
+import userHelpers from '../../helpers/user';
+import bookHelpers from '../../helpers/book';
 
 const userController = {};
 
@@ -28,6 +32,9 @@ userController.findAll = async (req, res) => {
 userController.findOne = async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+    }
     return res.json(user);
   } catch (error) {
     return res.status(500).json({ error: error.toString() });
@@ -36,12 +43,53 @@ userController.findOne = async (req, res) => {
 
 // Borrow Book
 userController.borrow = async (req, res) => {
-  console.log('borrow job');
+  await userHelpers.checkUser(req, res);
+  await bookHelpers.checkBook(req, res);
+  await borrowHelpers.checkBorrow(req, res);
+
+  const data = new Borrows({
+    user_id: req.params.userId,
+    book_id: req.params.bookId,
+    return: false,
+  });
+
+  data
+    .save()
+    .then((borrow) => res.json(borrow))
+    .catch((error) => res.status(500).json({ error: error.toString() }));
 };
 
 // Return Book
 userController.return = async (req, res) => {
-  console.log('return job');
+  if (!req.body.score) {
+    res.status(500).json({ error: '`score` is required' });
+  }
+
+  Borrows.findOne(
+    {
+      user_id: req.params.userId,
+      book_id: req.params.bookId,
+      return: false,
+    },
+    (error, data) => {
+      if (!data) {
+        res.status(404).json({ error: 'data not found' });
+      }
+      if (error) {
+        res.status(500).json({ error: error.toString() });
+      }
+
+      // eslint-disable-next-line no-param-reassign
+      data.return = true;
+      // eslint-disable-next-line no-param-reassign
+      data.score = req.body.score;
+
+      data
+        .save()
+        .then((borrow) => res.json(borrow))
+        .catch((err) => res.status(500).json({ error: err.toString() }));
+    },
+  );
 };
 
 export default userController;
