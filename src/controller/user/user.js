@@ -43,20 +43,22 @@ userController.findOne = async (req, res) => {
 
 // Borrow Book
 userController.borrow = async (req, res) => {
-  await userHelpers.checkUser(req, res);
-  await bookHelpers.checkBook(req, res);
-  await borrowHelpers.checkBorrow(req, res);
+  const isUser = await userHelpers.checkUser(req, res);
+  const isBook = await bookHelpers.checkBook(req, res);
+  const isBorrow = await borrowHelpers.checkBorrow(req, res);
 
-  const data = new Borrows({
-    user_id: req.params.userId,
-    book_id: req.params.bookId,
-    return: false,
-  });
+  if (isUser && isBook && !isBorrow) {
+    const data = new Borrows({
+      user_id: req.params.userId,
+      book_id: req.params.bookId,
+      return: false,
+    });
 
-  data
-    .save()
-    .then((borrow) => res.json(borrow))
-    .catch((error) => res.status(500).json({ error: error.toString() }));
+    data
+      .save()
+      .then((borrow) => res.json(borrow))
+      .catch((error) => res.status(500).json({ error: error.toString() }));
+  }
 };
 
 // Return Book
@@ -65,12 +67,13 @@ userController.return = async (req, res) => {
     res.status(500).json({ error: '`score` is required' });
   }
 
-  Borrows.findOne(
+  Borrows.findOneAndUpdate(
     {
       user_id: req.params.userId,
       book_id: req.params.bookId,
       return: false,
     },
+    { $set: { return: true, score: req.body.score } },
     (error, data) => {
       if (!data) {
         res.status(404).json({ error: 'data not found' });
