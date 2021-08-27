@@ -10,7 +10,7 @@ module.exports = {
   rules: {
     'prettier/prettier': 'error',
   },
-  plugins: ['prettier'],
+  plugins: ['prettier', 'jest'],
   settings: {
     'import/resolver': {
       'babel-module': {},

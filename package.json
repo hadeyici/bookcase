@@ -9,23 +9,26 @@
     "prod": "node ./dist/bin/www.js",
     "lint": "eslint \"src/**/*.js\"",
     "lint:fix": "eslint \"src/**/*.js\" --fix",
-    "format": "prettier --write \"src/**/*.js\""
+    "format": "prettier --write \"src/**/*.js\"",
+    "test": "mocha tests/**/*.js --timeout 60000 --require @babel/register --require @babel/polyfill --exit"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
+    "@babel/register": "^7.15.3",
     "body-parser": "^1.19.0",
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
     "cookie-parser": "~1.4.4",
     "core-js": "^3.16.3",
     "debug": "~2.6.9",
     "dotenv": "^10.0.0",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
+    "mocha": "8.4.0",
     "mongoose": "^5.9.6",
     "morgan": "~1.9.1",
     "regenerator-runtime": "^0.13.9",
     "validator": "^13.6.0"
-  },
-  "engines": {
-    "node": ">=10.16.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",
@@ -38,6 +41,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-babel-module": "^5.3.1",
     "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-jest": "^24.4.0",
     "eslint-plugin-prettier": "^3.4.1",
     "prettier": "^2.3.2"
   },
