@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import debug from 'debug';
+
 import appConfig from './env';
 
 const log = debug('app');
@@ -28,8 +29,10 @@ mongoose.connection.on('error', (error) => {
 });
 
 mongoose.set('debug', appConfig.mongoDebug);
+
 const connectMongo = async () => {
   const connectionuri = appConfig.dbConnectionString;
+
   await mongoose.connect(connectionuri, {
     useNewUrlParser: true,
     useFindAndModify: false,

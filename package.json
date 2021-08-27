@@ -8,6 +8,7 @@
     "build": "npm run clean && babel ./src --out-dir dist --copy-files",
     "prod": "node ./dist/bin/www.js",
     "lint": "eslint \"src/**/*.js\"",
+    "lint:fix": "eslint \"src/**/*.js\" --fix",
     "format": "prettier --write \"src/**/*.js\""
   },
   "dependencies": {
@@ -18,7 +19,6 @@
     "dotenv": "^10.0.0",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
-    "jade": "~1.11.0",
     "mongoose": "^5.9.6",
     "morgan": "~1.9.1",
     "regenerator-runtime": "^0.13.9",
@@ -48,7 +48,7 @@
     "url": "git+https://github.com/hadeyici/bookcase.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Hatice Ergün",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/hadeyici/bookcase/issues"

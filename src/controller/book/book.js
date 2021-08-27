@@ -1,4 +1,5 @@
 import Book from '../../models/Book';
+import borrowHelpers from '../../helpers/borrow';
 
 const bookController = {};
 
@@ -29,9 +30,16 @@ bookController.findOne = async (req, res) => {
   try {
     const book = await Book.findById(req.params.bookId);
     if (!book) {
-      res.status(404).json({ error: 'Book not found' });
+      return res.status(404).json({ error: 'Book not found' });
     }
-    return res.json(book);
+
+    const score = await borrowHelpers.avgBook(req, res);
+
+    return res.json({
+      id: book.id,
+      name: book.name,
+      score,
+    });
   } catch (error) {
     return res.status(500).json({ error: error.toString() });
   }

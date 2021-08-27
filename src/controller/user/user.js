@@ -35,13 +35,22 @@ userController.findOne = async (req, res) => {
     if (!user) {
       res.status(404).json({ error: 'User not found' });
     }
-    return res.json(user);
+
+    const past = await borrowHelpers.getBooks(req, res, true);
+    const present = await borrowHelpers.getBooks(req, res, false);
+
+    return res.json({
+      id: user.id,
+      name: user.name,
+      books: { past, present },
+    });
   } catch (error) {
     return res.status(500).json({ error: error.toString() });
   }
 };
 
 // Borrow Book
+// eslint-disable-next-line consistent-return
 userController.borrow = async (req, res) => {
   const isUser = await userHelpers.checkUser(req, res);
   const isBook = await bookHelpers.checkBook(req, res);
@@ -54,10 +63,11 @@ userController.borrow = async (req, res) => {
       return: false,
     });
 
-    data
+    const borrow = await data
       .save()
-      .then((borrow) => res.json(borrow))
       .catch((error) => res.status(500).json({ error: error.toString() }));
+
+    return res.json(borrow);
   }
 };
 
