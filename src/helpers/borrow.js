@@ -4,25 +4,22 @@ import Borrows from '../models/Borrows';
 const borrowHelpers = {};
 
 // Existing Borrow
-// eslint-disable-next-line consistent-return
 borrowHelpers.checkBorrow = async (req, res) => {
   try {
-    const borrow = await Borrows.findOne({
+    const isBorrow = await Borrows.findOne({
       book_id: req.params.bookId,
       return: false,
     });
 
-    if (borrow) {
-      res.status(500).json({ error: 'This book already borrow' });
-      return true;
+    if (isBorrow) {
+      return Promise.reject(new Error('This book already borrow'));
     }
-    return false;
+    return true;
   } catch (error) {
-    res.status(500).json({ error: error.toString() });
+    return res.status(500).json({ error: error.toString() });
   }
 };
 
-// eslint-disable-next-line consistent-return
 borrowHelpers.getBooks = async (req, res, value) => {
   try {
     const books = await Borrows.aggregate([
@@ -52,12 +49,12 @@ borrowHelpers.getBooks = async (req, res, value) => {
     if (books) {
       return books;
     }
+    return [];
   } catch (error) {
-    res.status(500).json({ error: error.toString() });
+    return res.status(500).json({ error: error.toString() });
   }
 };
 
-// eslint-disable-next-line consistent-return
 borrowHelpers.avgBook = async (req, res) => {
   try {
     const avg = await Borrows.aggregate([
@@ -79,7 +76,7 @@ borrowHelpers.avgBook = async (req, res) => {
     }
     return -1;
   } catch (error) {
-    res.status(500).json({ error: error.toString() });
+    return res.status(500).json({ error: error.toString() });
   }
 };
 

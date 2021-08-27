@@ -12,10 +12,11 @@ userController.create = async (req, res) => {
     name: req.body.name,
   });
 
-  data
+  const user = await data
     .save()
-    .then((user) => res.json(user))
     .catch((error) => res.status(500).json({ error: error.toString() }));
+
+  return res.json(user);
 };
 
 // Get All Users
@@ -50,13 +51,12 @@ userController.findOne = async (req, res) => {
 };
 
 // Borrow Book
-// eslint-disable-next-line consistent-return
 userController.borrow = async (req, res) => {
-  const isUser = await userHelpers.checkUser(req, res);
-  const isBook = await bookHelpers.checkBook(req, res);
-  const isBorrow = await borrowHelpers.checkBorrow(req, res);
+  try {
+    await userHelpers.checkUser(req, res);
+    await bookHelpers.checkBook(req, res);
+    await borrowHelpers.checkBorrow(req, res);
 
-  if (isUser && isBook && !isBorrow) {
     const data = new Borrows({
       user_id: req.params.userId,
       book_id: req.params.bookId,
@@ -68,41 +68,43 @@ userController.borrow = async (req, res) => {
       .catch((error) => res.status(500).json({ error: error.toString() }));
 
     return res.json(borrow);
+  } catch (error) {
+    return res.status(500).json({ error: error.toString() });
   }
 };
 
 // Return Book
 userController.return = async (req, res) => {
   if (!req.body.score) {
-    res.status(500).json({ error: '`score` is required' });
+    return res.status(201).json({ error: '`score` is required' });
   }
 
-  Borrows.findOneAndUpdate(
+  await Borrows.findOneAndUpdate(
     {
       user_id: req.params.userId,
       book_id: req.params.bookId,
       return: false,
     },
     { $set: { return: true, score: req.body.score } },
-    (error, data) => {
+    async (error, data) => {
       if (!data) {
-        res.status(404).json({ error: 'data not found' });
+        return res.status(404).json({ error: 'data not found' });
       }
       if (error) {
-        res.status(500).json({ error: error.toString() });
+        return res.status(500).json({ error: error.toString() });
       }
 
-      // eslint-disable-next-line no-param-reassign
       data.return = true;
-      // eslint-disable-next-line no-param-reassign
       data.score = req.body.score;
 
-      data
+      const borrow = await data
         .save()
-        .then((borrow) => res.json(borrow))
         .catch((err) => res.status(500).json({ error: err.toString() }));
+
+      return res.json(borrow);
     },
   );
+  return {};
 };
 
 export default userController;

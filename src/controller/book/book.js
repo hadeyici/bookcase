@@ -9,10 +9,11 @@ bookController.create = async (req, res) => {
     name: req.body.name,
   });
 
-  data
+  const book = await data
     .save()
-    .then((book) => res.json(book))
     .catch((error) => res.status(500).json({ error: error.toString() }));
+
+  return res.json(book);
 };
 
 // Get All Books

@@ -9,6 +9,7 @@ module.exports = {
   },
   rules: {
     'prettier/prettier': 'error',
+    'no-param-reassign': ['error', { props: false }],
   },
   plugins: ['prettier', 'jest'],
   settings: {
