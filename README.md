@@ -22,12 +22,14 @@ Nodejs library case with Express, Mongoose, and MongoDB support to develop REST 
 
 ##  GET Routes
 `http://localhost:3000/users`
-* post `` 
+* post `users` 
 * get `users`
 * get `users/1`
+* post `users/1/borrow/bookId`
+* post `users/1/return/bookId`
 
 `http://localhost:3000/books`
-* post `` 
+* post `books`
 * get `books`
 * get `books/1`
 
